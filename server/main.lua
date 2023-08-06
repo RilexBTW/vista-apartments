@@ -81,6 +81,12 @@ RegisterNetEvent('apartments:server:UpdateApartment', function(type, label)
     MySQL.update('UPDATE apartments SET type = ?, label = ? WHERE citizenid = ?', { type, label, Player.PlayerData.citizenid })
     TriggerClientEvent('QBCore:Notify', src, Lang:t('success.changed_apart'))
     TriggerClientEvent("apartments:client:SetHomeBlip", src, type)
+    if ox_inventory then
+        local result = MySQL.query.await('SELECT * FROM apartments WHERE citizenid = ?', { Player.PlayerData.citizenid })
+        if result[1] ~= nil then
+            TriggerEvent('qb-apartments:server:RegisterStash', result[1].name, label) -- rename the stash name in case of apartment change
+        end
+    end    
 end)
 
 RegisterNetEvent('apartments:server:RingDoor', function(apartmentId, apartment)
