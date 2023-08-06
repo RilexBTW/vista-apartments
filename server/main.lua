@@ -1,5 +1,6 @@
 local ApartmentObjects = {}
 local QBCore = exports['qb-core']:GetCoreObject()
+local ox_inventory = nil
 
 -- Functions
 
@@ -233,3 +234,12 @@ QBCore.Functions.CreateCallback('apartments:GetOutfits', function(source, cb)
         end
     end
 end)
+
+if GetResourceState('ox_inventory') ~= 'missing' then
+    ox_inventory = exports.ox_inventory
+    RegisterNetEvent('qb-apartments:server:RegisterStash', function(currentApartmentId, currentApartmentLabel)
+        ox_inventory:RegisterStash(currentApartmentId, currentApartmentLabel and 'Stash - '..currentApartmentLabel..' Apartment' or 'Apartment Stash', 100, 1000000)
+    end)
+end
+
+
